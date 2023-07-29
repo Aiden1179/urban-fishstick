@@ -1,0 +1,30 @@
+vec3 RgbToHsv( vec3 vRGB )
+{
+	vec3 vHSV = vec3( 0.0, 0.0, 0.0 );
+	float minVal = min( vRGB.r, min( vRGB.g, vRGB.b ) );
+	float maxVal = max( vRGB.r, max( vRGB.g, vRGB.b ) );
+	float delta = maxVal - minVal; // Delta vRGB value
+	vHSV.z = maxVal;
+	if ( delta != 0.0 ) // If gray, leave H & S at zero
+	{
+		vHSV.y = delta / maxVal;
+		vec3 delRGB;
+		vec3 maxVec = vec3( maxVal, maxVal, maxVal );
+		delRGB = ( ( ( maxVec - vRGB ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+		if ( vRGB.x == maxVal )
+		{
+			vHSV.x = delRGB.z - delRGB.y;
+		}
+		else if ( vRGB.y == maxVal )
+		{
+			vHSV.x = ( 1.0 / 3.0 ) + delRGB.x - delRGB.z;
+		}
+		else if ( vRGB.z == maxVal )
+		{
+			vHSV.x = ( 2.0 / 3.0 ) + delRGB.y - delRGB.x;
+		}
+
+		vHSV.x = fract( vHSV.x );
+	}
+	return ( vHSV );
+}
